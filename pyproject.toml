@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "yahoo_finance_news_spider"
 version = "0.0.1"
-dependencies = ["scrapy", "scrapy-user-agents"] 
+dependencies = ["scrapy", "scrapy-user-agents", "scrapy-playwright"] 
 requires-python = ">=3.6, <=3.13"
 authors = [
   {name = "Konstantinos Skepetaris", email = "tsepe21@hotmail.com"}

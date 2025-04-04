@@ -30,4 +30,4 @@ For more information on how to use see [Usage](https://github.com/bloomberg/memr
 
 ## Usage
 
-`scrapy crawl <spider_name>`
+`scrapy crawl yahoofinance_news`

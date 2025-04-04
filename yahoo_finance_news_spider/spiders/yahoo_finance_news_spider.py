@@ -16,7 +16,7 @@ class YahooFinanceNewsSpider(CrawlSpider):
     ]
     
     rules = [
-        Rule(LinkExtractor(allow=r'https://finance\.yahoo\.com/news/[a-zA-Z0-9\-]+'), callback='parse_link'),
+        Rule(LinkExtractor(allow=r'https://finance\.yahoo\.com/news/[a-zA-Z0-9\-]+'), callback='parse_link', follow=True),
     ]
 
     def parse_link(self, response):

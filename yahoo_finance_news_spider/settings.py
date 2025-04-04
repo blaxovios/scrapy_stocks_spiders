@@ -15,7 +15,7 @@ NEWSPIDER_MODULE = "yahoo_finance_news_spider.spiders"
 RETRY_ENABLED = True
 RETRY_TIMES = 2
 RETRY_HTTP_CODES = [500, 502, 503, 504, 522, 524, 408, 429, 400, 403, 404]
-LOG_LEVEL='DEBUG'
+LOG_LEVEL='INFO'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "yahoo_finance_news_spider (+http://www.yourdomain.com)"
@@ -24,12 +24,12 @@ LOG_LEVEL='DEBUG'
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 1
+CONCURRENT_REQUESTS = 10
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 5
+DOWNLOAD_DELAY = 1
 RANDOMIZE_DOWNLOAD_DELAY = True
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
@@ -112,9 +112,4 @@ FEEDS = {
         'format': 'parquet',
         'batch_item_count': 10,  # Write every 10 objects to Parquet
     }
-}
-
-PLAYWRIGHT_BROWSER_TYPE = 'chromium'
-PLAYWRIGHT_LAUNCH_OPTIONS = {
-    'headless': False,
 }

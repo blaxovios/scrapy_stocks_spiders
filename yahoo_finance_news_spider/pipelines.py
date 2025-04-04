@@ -1,20 +1,28 @@
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
+import polars as pl
+import os
 
-
-# useful for handling different item types with a single interface
-import json
 
 class YahooFinanceNewsSpiderPipeline:
     def __init__(self):
-        self.file = open('scraped_data.json', 'w')
+        self.file_path = 'scraped_data.parquet'
+        self.items = []
 
     def process_item(self, item, spider):
-        line = json.dumps(dict(item)) + "\n"
-        self.file.write(line)
+        self.items.append(dict(item))
+        if len(self.items) >= 10:
+            self._append_to_parquet()
+            self.items = []
         return item
 
     def close_spider(self, spider):
-        self.file.close()
+        if self.items:
+            self._append_to_parquet()
+
+    def _append_to_parquet(self):
+        df = pl.DataFrame(self.items)
+        if not os.path.exists(self.file_path):
+            df.write_parquet(self.file_path)
+        else:
+            existing_df = pl.read_parquet(self.file_path)
+            df = pl.concat([existing_df, df])
+            df.write_parquet(self.file_path)

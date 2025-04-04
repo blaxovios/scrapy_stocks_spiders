@@ -41,11 +41,16 @@ COOKIES_ENABLED = False
 # Disable Telnet Console (enabled by default)
 TELNETCONSOLE_ENABLED = False
 
+USER_AGENTS = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15",
+    "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0",
+    # Add more user agents here...
+]
+
 # Override the default request headers:
 DEFAULT_REQUEST_HEADERS = {
-  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
   'Accept-Language': 'en-US,en;q=0.5',
-  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
   'Referer': 'https://finance.yahoo.com/',
 }
 
@@ -62,7 +67,7 @@ SPIDER_MIDDLEWARES = {
 #}
 DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
-    'scrapy_user_agents.middlewares.RandomUserAgentMiddleware': 400,
+    # 'scrapy_user_agents.middlewares.RandomUserAgentMiddleware': 400,
 }
 
 # Enable or disable extensions
@@ -100,10 +105,12 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = CONCURRENT_REQUESTS
 
 # Set settings whose default value is deprecated to a future-proof value
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
+
+FEED_EXPORT_BATCH_ITEM_COUNT = 10
 FEEDS = {
-    'scraped_data.json': {
-        'format': 'json',
-        'encoding': 'utf-8',
+    'scraped_data.parquet': {
+        'format': 'parquet',
+        'batch_item_count': 10,  # Write every 10 objects to Parquet
     }
 }
 

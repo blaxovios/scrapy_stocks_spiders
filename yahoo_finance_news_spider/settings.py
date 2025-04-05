@@ -67,7 +67,9 @@ SPIDER_MIDDLEWARES = {
 #}
 DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
-    # 'scrapy_user_agents.middlewares.RandomUserAgentMiddleware': 400,
+    "yahoo_finance_news_spider.middlewares.YahooFinanceNewsSpiderDownloaderMiddleware": 543,
+    "yahoo_finance_news_spider.middlewares.CustomRetryMiddleware": 550,
+    'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
 }
 
 # Enable or disable extensions
@@ -106,10 +108,10 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = CONCURRENT_REQUESTS
 # Set settings whose default value is deprecated to a future-proof value
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 
-FEED_EXPORT_BATCH_ITEM_COUNT = 10
+FEED_EXPORT_BATCH_ITEM_COUNT = 100
 FEEDS = {
     'scraped_data.parquet': {
         'format': 'parquet',
-        'batch_item_count': 10,  # Write every 10 objects to Parquet
+        'batch_item_count': 100,  # Write every 10 objects to Parquet
     }
 }

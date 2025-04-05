@@ -5,6 +5,8 @@
 
 from scrapy import signals
 from scrapy.exceptions import NotConfigured
+from scrapy.downloadermiddlewares.retry import RetryMiddleware
+from scrapy.utils.response import response_status_message
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
@@ -29,12 +31,12 @@ class YahooFinanceNewsSpiderSpiderMiddleware:
         # Should return None or raise an exception.
         return None
 
-    def process_spider_output(self, response, result, spider):
+    async def process_spider_output(self, response, result, spider):
         # Called with the results returned from the Spider, after
         # it has processed the response.
 
         # Must return an iterable of Request, or item objects.
-        for i in result:
+        async for i in result:
             yield i
 
     def process_spider_exception(self, response, exception, spider):
@@ -105,3 +107,19 @@ class YahooFinanceNewsSpiderDownloaderMiddleware:
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)
 
+
+class CustomRetryMiddleware(RetryMiddleware):
+    def process_response(self, request, response, spider):
+        try:
+            return super().process_response(request, response, spider)
+        except ValueError as e:
+            spider.logger.error("Caught ValueError in process_response: %s", e)
+            reason = response_status_message(response.status)
+            # Attempt to retry the request; if retry fails, return the original response
+            return self._retry(request, reason, spider) or response
+
+    def process_exception(self, request, exception, spider):
+        if isinstance(exception, ValueError):
+            spider.logger.error("Caught ValueError in process_exception: %s", exception)
+            reason = str(exception)
+            return self._retry(request, reason, spider)

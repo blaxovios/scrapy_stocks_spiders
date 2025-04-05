@@ -13,7 +13,7 @@ SPIDER_MODULES = ["yahoo_finance_news_spider.spiders"]
 NEWSPIDER_MODULE = "yahoo_finance_news_spider.spiders"
 
 RETRY_ENABLED = True
-RETRY_TIMES = 2
+RETRY_TIMES = 1
 RETRY_HTTP_CODES = [500, 502, 503, 504, 522, 524, 408, 429, 400, 403, 404]
 LOG_LEVEL='INFO'
 
@@ -30,7 +30,7 @@ CONCURRENT_REQUESTS = 10
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
 DOWNLOAD_DELAY = 1
-RANDOMIZE_DOWNLOAD_DELAY = True
+RANDOMIZE_DOWNLOAD_DELAY = False
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -68,6 +68,8 @@ SPIDER_MIDDLEWARES = {
 DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
     "yahoo_finance_news_spider.middlewares.YahooFinanceNewsSpiderDownloaderMiddleware": 543,
+    "yahoo_finance_news_spider.middlewares.DuplicateUrlFilterMiddleware": 545,
+    # Keep your custom retry middleware if applicable
     "yahoo_finance_news_spider.middlewares.CustomRetryMiddleware": 550,
     'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
 }
@@ -108,10 +110,5 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = CONCURRENT_REQUESTS
 # Set settings whose default value is deprecated to a future-proof value
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 
-FEED_EXPORT_BATCH_ITEM_COUNT = 100
-FEEDS = {
-    'scraped_data.parquet': {
-        'format': 'parquet',
-        'batch_item_count': 100,  # Write every 10 objects to Parquet
-    }
-}
+FEED_FORMAT = 'parquet'
+FEED_URI = 'file:///data/parquet/scraped_data_{time}.parquet'

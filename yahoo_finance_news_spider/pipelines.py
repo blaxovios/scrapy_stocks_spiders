@@ -3,17 +3,19 @@ import polars as pl
 import datetime
 import asyncio
 
+
 class YahooFinanceNewsSpiderPipeline:
     def __init__(self):
         self.file_path = 'data/parquet/'
         self.items = []
         self.file_count = 0
         self.lock = asyncio.Lock()
+        self.max_items_per_file = 5000
 
     async def process_item(self, item, spider):
         async with self.lock:
             self.items.append(dict(item))
-            if len(self.items) >= 100:
+            if len(self.items) >= self.max_items_per_file:
                 await self._append_to_parquet()
                 self.items = []
                 self.file_count += 1
@@ -29,5 +31,5 @@ class YahooFinanceNewsSpiderPipeline:
         timestamp = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
         file_name = f'scraped_data_{self.file_count:03d}_{timestamp}.parquet'
         file_path = os.path.join(self.file_path, file_name)
-        os.makedirs(self.file_path, exist_ok=True)
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
         await asyncio.to_thread(lf.sink_parquet, file_path)

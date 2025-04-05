@@ -1,15 +1,11 @@
-# Define here the models for your spider middleware
-#
-# See documentation in:
-# https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-
+from os import path, listdir
 from scrapy import signals
-from scrapy.exceptions import NotConfigured
+from scrapy.exceptions import NotConfigured, IgnoreRequest
 from scrapy.downloadermiddlewares.retry import RetryMiddleware
 from scrapy.utils.response import response_status_message
-
-# useful for handling different item types with a single interface
-from itemadapter import is_item, ItemAdapter
+import polars as pl
+# Import local modules
+from yahoo_finance_news_spider.utils import normalize_url
 
 
 class YahooFinanceNewsSpiderSpiderMiddleware:
@@ -123,3 +119,56 @@ class CustomRetryMiddleware(RetryMiddleware):
             spider.logger.error("Caught ValueError in process_exception: %s", exception)
             reason = str(exception)
             return self._retry(request, reason, spider)
+
+
+class DuplicateUrlFilterMiddleware:
+    @classmethod
+    def from_crawler(cls, crawler):
+        middleware = cls()
+        middleware.scraped_urls = set()
+        crawler.signals.connect(middleware.spider_opened, signal=signals.spider_opened)
+        return middleware
+
+    def spider_opened(self, spider):
+        """Load and log scraped URLs from existing parquet files."""
+        parquet_dir = 'data/parquet'
+        if not path.exists(parquet_dir):
+            spider.logger.info("Parquet directory does not exist: %s", parquet_dir)
+            return
+
+        parquet_files = [f for f in listdir(parquet_dir) if f.endswith('.parquet')]
+        for file in parquet_files:
+            file_path = path.join(parquet_dir, file)
+            try:
+                # Read only the 'url' column
+                df = pl.read_parquet(file_path, columns=['url'])
+                urls = df['url'].to_list()
+                spider.logger.info("Loaded URLs from %s: %s", file, urls)
+                for url in urls:
+                    if isinstance(url, list):
+                        for u in url:
+                            self.scraped_urls.add(normalize_url(u))
+                    else:
+                        self.scraped_urls.add(normalize_url(url))
+            except Exception as e:
+                spider.logger.error("Error reading file %s: %s", file, e)
+        spider.logger.info("Total scraped URLs loaded: %d", len(self.scraped_urls))
+
+    def process_request(self, request, spider):
+        """
+        For every outgoing request (except for start_urls and dont_filter requests), check if the
+        normalized URL is in the scraped set. If so, mark it as duplicate.
+        """
+        # Allow requests flagged to bypass filtering.
+        if request.meta.get("dont_filter", False):
+            return None
+
+        # Always allow start_urls to be processed.
+        if request.url in spider.start_urls:
+            return None
+
+        normalized = normalize_url(request.url)
+        if normalized in self.scraped_urls:
+            spider.logger.info("Marking URL as duplicate (already scraped): %s", request.url)
+            request.meta['duplicate'] = True
+        return None

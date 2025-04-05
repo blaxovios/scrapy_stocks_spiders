@@ -1,5 +1,5 @@
 import hashlib
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import urlsplit, urlunsplit, urlparse, urlunparse
 from uuid import uuid5, NAMESPACE_DNS
 from scrapy import http
 
@@ -31,4 +31,13 @@ def generate_uuid(response: http.Response) -> str:
         return str(uuid5(NAMESPACE_DNS, response.url))
 
     uuid_str = f"{normalized_url}:{content_hash}"
-    return str(uuid5(NAMESPACE_DNS, uuid_str))
+    return str(uuid5(NAMESPACE_DNS, uuid_str))       
+ 
+def normalize_url(url):
+    """
+    Normalize the URL by removing trailing slashes from the path.
+    You can extend this function for further normalization.
+    """
+    parts = urlparse(url)
+    normalized_path = parts.path.rstrip('/')
+    return urlunparse((parts.scheme, parts.netloc, normalized_path, parts.params, parts.query, parts.fragment))

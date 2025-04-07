@@ -1,0 +1,57 @@
+2025-04-07 12:00:24,609 - root - INFO - Local logging setup complete
+2025-04-07 12:00:24,609 - scrapy.addons - INFO - Enabled addons:
+[]
+2025-04-07 12:00:24,616 - py.warnings - WARNING - /home/blaxovios/yahoo_finance_news_spider/venv/lib/python3.12/site-packages/scrapy/extensions/feedexport.py:432: ScrapyDeprecationWarning: The `FEED_URI` and `FEED_FORMAT` settings have been deprecated in favor of the `FEEDS` setting. Please see the `FEEDS` setting docs for more details
+  exporter = cls(crawler)
+
+2025-04-07 12:00:24,617 - scrapy.extensions.feedexport - ERROR - Unknown feed format: parquet
+2025-04-07 12:00:24,618 - scrapy.middleware - INFO - Enabled extensions:
+['scrapy.extensions.corestats.CoreStats',
+ 'scrapy.extensions.memusage.MemoryUsage',
+ 'scrapy.extensions.logstats.LogStats',
+ 'scrapy.extensions.throttle.AutoThrottle']
+2025-04-07 12:00:24,619 - scrapy.crawler - INFO - Overridden settings:
+{'AUTOTHROTTLE_ENABLED': True,
+ 'AUTOTHROTTLE_TARGET_CONCURRENCY': 10,
+ 'BOT_NAME': 'yahoo_finance_news_spider',
+ 'CONCURRENT_REQUESTS': 10,
+ 'COOKIES_ENABLED': False,
+ 'DOWNLOAD_DELAY': 1,
+ 'LOG_ENABLED': False,
+ 'LOG_LEVEL': 'INFO',
+ 'NEWSPIDER_MODULE': 'yahoo_finance_news_spider.spiders',
+ 'RANDOMIZE_DOWNLOAD_DELAY': False,
+ 'RETRY_HTTP_CODES': [500, 502, 503, 504, 522, 524, 408, 429, 400, 403, 404],
+ 'RETRY_TIMES': 1,
+ 'SPIDER_MODULES': ['yahoo_finance_news_spider.spiders'],
+ 'TELNETCONSOLE_ENABLED': False,
+ 'TWISTED_REACTOR': 'twisted.internet.asyncioreactor.AsyncioSelectorReactor'}
+2025-04-07 12:00:24,786 - scrapy.middleware - INFO - Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'yahoo_finance_news_spider.middlewares.YahooFinanceNewsSpiderDownloaderMiddleware',
+ 'yahoo_finance_news_spider.middlewares.DuplicateUrlFilterMiddleware',
+ 'yahoo_finance_news_spider.middlewares.CustomRetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2025-04-07 12:00:24,787 - scrapy.middleware - INFO - Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'yahoo_finance_news_spider.middlewares.YahooFinanceNewsSpiderSpiderMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2025-04-07 12:00:24,788 - scrapy.middleware - INFO - Enabled item pipelines:
+['yahoo_finance_news_spider.pipelines.YahooFinanceNewsSpiderPipeline']
+2025-04-07 12:00:24,788 - scrapy.core.engine - INFO - Spider opened
+2025-04-07 12:00:24,791 - scrapy.extensions.logstats - INFO - Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2025-04-07 12:00:24,792 - yahoofinance_news - INFO - Spider opened: yahoofinance_news
+2025-04-07 12:00:24,970 - yahoofinance_news - INFO - Spider opened: yahoofinance_news
+2025-04-07 12:01:24,796 - scrapy.extensions.logstats - INFO - Crawled 37 pages (at 37 pages/min), scraped 31 items (at 31 items/min)
+2025-04-07 12:02:24,797 - scrapy.extensions.logstats - INFO - Crawled 86 pages (at 49 pages/min), scraped 74 items (at 43 items/min)
+2025-04-07 12:03:24,792 - scrapy.extensions.logstats - INFO - Crawled 141 pages (at 55 pages/min), scraped 88 items (at 14 items/min)
+2025-04-07 12:04:24,796 - scrapy.extensions.logstats - INFO - Crawled 197 pages (at 56 pages/min), scraped 90 items (at 2 items/min)

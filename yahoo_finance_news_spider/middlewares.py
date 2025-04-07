@@ -130,28 +130,25 @@ class DuplicateUrlFilterMiddleware:
         return middleware
 
     def spider_opened(self, spider):
-        """Load and log scraped URLs from existing parquet files."""
-        parquet_dir = 'data/parquet'
+        """Load and log scraped URLs from existing parquet file."""
+        parquet_dir = '/home/blaxovios/statistics_calculations/data/static/parquet/all_stock_news.parquet'
         if not path.exists(parquet_dir):
             spider.logger.debug("Parquet directory does not exist: %s", parquet_dir)
             return
 
-        parquet_files = [f for f in listdir(parquet_dir) if f.endswith('.parquet')]
-        for file in parquet_files:
-            file_path = path.join(parquet_dir, file)
-            try:
-                # Read only the 'url' column
-                df = pl.read_parquet(file_path, columns=['url'])
-                urls = df['url'].to_list()
-                spider.logger.debug("Loaded URLs from %s: %s", file, urls)
-                for url in urls:
-                    if isinstance(url, list):
-                        for u in url:
-                            self.scraped_urls.add(normalize_url(u))
-                    else:
-                        self.scraped_urls.add(normalize_url(url))
-            except Exception as e:
-                spider.logger.error("Error reading file %s: %s", file, e)
+        try:
+            # Read only the 'url' column
+            df = pl.read_parquet(parquet_dir, columns=['url'])
+            urls = df['url'].to_list()
+            spider.logger.debug("Loaded URLs from %s: %s", parquet_dir, urls)
+            for url in urls:
+                if isinstance(url, list):
+                    for u in url:
+                        self.scraped_urls.add(normalize_url(u))
+                else:
+                    self.scraped_urls.add(normalize_url(url))
+        except Exception as e:
+            spider.logger.error("Error reading file %s: %s", parquet_dir, e)
         spider.logger.debug("Total scraped URLs loaded: %d", len(self.scraped_urls))
 
     def process_request(self, request, spider):

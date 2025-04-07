@@ -1,6 +1,6 @@
-from os import path, listdir
+from os import path
 from scrapy import signals
-from scrapy.exceptions import NotConfigured, IgnoreRequest
+from scrapy.exceptions import NotConfigured
 from scrapy.downloadermiddlewares.retry import RetryMiddleware
 from scrapy.utils.response import response_status_message
 import polars as pl

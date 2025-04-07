@@ -10,7 +10,7 @@ class YahooFinanceNewsSpiderPipeline:
         self.items = []
         self.file_count = 0
         self.lock = asyncio.Lock()
-        self.max_items_per_file = 5000
+        self.max_items_per_file = 100
 
     async def process_item(self, item, spider):
         async with self.lock:

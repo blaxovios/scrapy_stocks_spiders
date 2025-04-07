@@ -23,7 +23,8 @@ class YahooFinanceNewsSpider(CrawlSpider):
     
     def __init__(self, *args, **kwargs):
         super(YahooFinanceNewsSpider, self).__init__(*args, **kwargs)
-        setup_logging(debug_filename='yahoo_finance_news_spider', console_level=logging.INFO)
+        setup_logging(debug_filename=self.settings.get('LOG_FILE', 'yahoo_finance_news_spider'),
+                      console_level=self.settings.get('LOG_LEVEL', logging.INFO))
 
     def parse_link(self, response):
         # If the middleware marked this response as duplicate, do not yield an item.

@@ -25,7 +25,7 @@ class YahooFinanceNewsSpider(CrawlSpider):
     def parse_link(self, response):
         # If the middleware marked this response as duplicate, do not yield an item.
         if response.meta.get('duplicate', False):
-            self.logger.info("Skipping item yield for duplicate URL: %s", response.url)
+            self.logger.debug("Skipping item yield for duplicate URL: %s", response.url)
             # Return nothing; however, CrawlSpider will still extract links per its rules.
             return
 
@@ -35,6 +35,11 @@ class YahooFinanceNewsSpider(CrawlSpider):
         item_loader.add_value('url', response.url)
         item_loader.add_xpath('article_date', '//time/@datetime')
         item_loader.add_value('timestamp', datetime.now().isoformat())
+        stock_prices = {}
+        for fin_streamer in response.xpath('//fin-streamer'):
+            symbol = fin_streamer.xpath('./@data-symbol').get()
+            value = fin_streamer.xpath('./span/text()').get()
+            stock_prices[symbol] = value
         item = item_loader.load_item()
 
         scraped_data = {
@@ -43,6 +48,7 @@ class YahooFinanceNewsSpider(CrawlSpider):
             'title': item.get('title', None),
             'content': item.get('content', None),
             'article_date': item.get('article_date', None),
-            'timestamp': item.get('timestamp', None)
+            'timestamp': item.get('timestamp', None),
+            'stock_prices': stock_prices
         }
         yield scraped_data

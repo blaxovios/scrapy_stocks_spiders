@@ -1,13 +1,12 @@
-import os
-import polars as pl
-from scrapy.exceptions import IgnoreRequest
 from scrapy.loader import ItemLoader
 from itemloaders.processors import Join
-from scrapy.spiders import CrawlSpider, Rule
+from scrapy.spiders import (CrawlSpider, Rule)
 from scrapy.linkextractors import LinkExtractor
 from datetime import datetime
+import logging
 from yahoo_finance_news_spider.items import YahooFinanceNewsSpiderItem
-from yahoo_finance_news_spider.utils import generate_uuid
+from yahoo_finance_news_spider.utils import (generate_uuid, setup_logging)
+
 
 class YahooFinanceNewsSpider(CrawlSpider):
     name = "yahoofinance_news"
@@ -21,6 +20,10 @@ class YahooFinanceNewsSpider(CrawlSpider):
             follow=True
         ),
     ]
+    
+    def __init__(self, *args, **kwargs):
+        super(YahooFinanceNewsSpider, self).__init__(*args, **kwargs)
+        setup_logging(debug_filename='yahoo_finance_news_spider', console_level=logging.INFO)
 
     def parse_link(self, response):
         # If the middleware marked this response as duplicate, do not yield an item.

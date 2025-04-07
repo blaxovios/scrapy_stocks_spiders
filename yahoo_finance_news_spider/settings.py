@@ -16,6 +16,7 @@ RETRY_ENABLED = True
 RETRY_TIMES = 1
 RETRY_HTTP_CODES = [500, 502, 503, 504, 522, 524, 408, 429, 400, 403, 404]
 LOG_LEVEL='INFO'
+LOG_ENABLED = False
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "yahoo_finance_news_spider (+http://www.yourdomain.com)"

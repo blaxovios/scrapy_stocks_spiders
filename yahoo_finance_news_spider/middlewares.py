@@ -133,7 +133,7 @@ class DuplicateUrlFilterMiddleware:
         """Load and log scraped URLs from existing parquet files."""
         parquet_dir = 'data/parquet'
         if not path.exists(parquet_dir):
-            spider.logger.info("Parquet directory does not exist: %s", parquet_dir)
+            spider.logger.debug("Parquet directory does not exist: %s", parquet_dir)
             return
 
         parquet_files = [f for f in listdir(parquet_dir) if f.endswith('.parquet')]
@@ -143,7 +143,7 @@ class DuplicateUrlFilterMiddleware:
                 # Read only the 'url' column
                 df = pl.read_parquet(file_path, columns=['url'])
                 urls = df['url'].to_list()
-                spider.logger.info("Loaded URLs from %s: %s", file, urls)
+                spider.logger.debug("Loaded URLs from %s: %s", file, urls)
                 for url in urls:
                     if isinstance(url, list):
                         for u in url:
@@ -152,7 +152,7 @@ class DuplicateUrlFilterMiddleware:
                         self.scraped_urls.add(normalize_url(url))
             except Exception as e:
                 spider.logger.error("Error reading file %s: %s", file, e)
-        spider.logger.info("Total scraped URLs loaded: %d", len(self.scraped_urls))
+        spider.logger.debug("Total scraped URLs loaded: %d", len(self.scraped_urls))
 
     def process_request(self, request, spider):
         """
@@ -169,6 +169,6 @@ class DuplicateUrlFilterMiddleware:
 
         normalized = normalize_url(request.url)
         if normalized in self.scraped_urls:
-            spider.logger.info("Marking URL as duplicate (already scraped): %s", request.url)
+            spider.logger.debug("Marking URL as duplicate (already scraped): %s", request.url)
             request.meta['duplicate'] = True
         return None

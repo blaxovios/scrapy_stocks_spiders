@@ -25,12 +25,12 @@ LOG_ENABLED = False
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 10
+CONCURRENT_REQUESTS = 32
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 1
+DOWNLOAD_DELAY = 0
 RANDOMIZE_DOWNLOAD_DELAY = False
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
@@ -67,7 +67,6 @@ SPIDER_MIDDLEWARES = {
 #    "yahoo_finance_news_spider.middlewares.YahooFinanceNewsSpiderDownloaderMiddleware": 543,
 #}
 DOWNLOADER_MIDDLEWARES = {
-    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
     "yahoo_finance_news_spider.middlewares.YahooFinanceNewsSpiderDownloaderMiddleware": 543,
     "yahoo_finance_news_spider.middlewares.DuplicateUrlFilterMiddleware": 545,
     # Keep your custom retry middleware if applicable

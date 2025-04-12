@@ -5,7 +5,7 @@
             "name": "Scrapy",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/venv/bin/scrapy",
+            "module": "scrapy",
             "args": ["crawl", "yahoofinance_news"],
             "console": "integratedTerminal",
             "justMyCode": true

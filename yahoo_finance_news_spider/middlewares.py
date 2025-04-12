@@ -1,6 +1,5 @@
-from os import path
+from os import path, listdir
 from scrapy import signals
-from scrapy.exceptions import NotConfigured
 from scrapy.downloadermiddlewares.retry import RetryMiddleware
 from scrapy.utils.response import response_status_message
 import polars as pl
@@ -86,8 +85,6 @@ class YahooFinanceNewsSpiderDownloaderMiddleware:
         # - return a Response object
         # - return a Request object
         # - or raise IgnoreRequest
-        if response.status == 404:
-            raise NotConfigured
         return response
 
     def process_exception(self, request, exception, spider):
@@ -111,7 +108,6 @@ class CustomRetryMiddleware(RetryMiddleware):
         except ValueError as e:
             spider.logger.error("Caught ValueError in process_response: %s", e)
             reason = response_status_message(response.status)
-            # Attempt to retry the request; if retry fails, return the original response
             return self._retry(request, reason, spider) or response
 
     def process_exception(self, request, exception, spider):
@@ -130,15 +126,20 @@ class DuplicateUrlFilterMiddleware:
         return middleware
 
     def spider_opened(self, spider):
-        """Load and log scraped URLs from existing parquet file."""
-        parquet_dir = '/home/blaxovios/statistics_calculations/data/static/parquet/all_stock_news.parquet'
+        """Load and log scraped URLs from existing parquet files in 'data/parquet' dir."""
+        parquet_dir = 'data/parquet'
         if not path.exists(parquet_dir):
             spider.logger.debug("Parquet directory does not exist: %s", parquet_dir)
             return
 
         try:
-            # Read only the 'url' column
-            df = pl.read_parquet(parquet_dir, columns=['url'])
+            # Read only the 'url' column from all parquet files
+            dfs = []
+            for file in listdir(parquet_dir):
+                if file.endswith(".parquet"):
+                    df = pl.read_parquet(path.join(parquet_dir, file), columns=['url'])
+                    dfs.append(df)
+            df = pl.concat(dfs)
             urls = df['url'].to_list()
             spider.logger.debug("Loaded URLs from %s: %s", parquet_dir, urls)
             for url in urls:
@@ -148,7 +149,7 @@ class DuplicateUrlFilterMiddleware:
                 else:
                     self.scraped_urls.add(normalize_url(url))
         except Exception as e:
-            spider.logger.error("Error reading file %s: %s", parquet_dir, e)
+            spider.logger.error("Error reading files in %s: %s", parquet_dir, e)
         spider.logger.debug("Total scraped URLs loaded: %d", len(self.scraped_urls))
 
     def process_request(self, request, spider):

@@ -14,18 +14,15 @@ from yahoo_finance_news_spider.utils import generate_uuid, setup_logging
 class YahooFinanceNewsSpider(CrawlSpider):
     name = "yahoofinance_news"
     allowed_domains = ["finance.yahoo.com"]
-    start_urls = ['https://finance.yahoo.com/news']
+    start_urls = ['https://finance.yahoo.com']
     
     # Only extract links that have "/news/" and end with ".html",
     # while denying URLs with unwanted segments.
     rules = [
         Rule(
-            LinkExtractor(
-                allow=(r'/news/.*\.html$',),
-                deny=(r'/about/', r'/quote/', r'/sitemap/')
-            ),
-            callback="parse_link",
-            follow=True,
+            LinkExtractor(allow=r'https://finance\.yahoo\.com/news/[a-zA-Z0-9\-]+'),
+            callback='parse_link',
+            follow=True
         ),
     ]
     

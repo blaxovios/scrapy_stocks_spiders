@@ -8,10 +8,10 @@ from itemloaders.processors import TakeFirst
 
 
 class YahooFinanceNewsSpiderItem(Item):
-    id = Field(output_processor=TakeFirst())
-    url = Field(output_processor=TakeFirst())
-    title = Field(output_processor=TakeFirst())
-    content = Field(output_processor=TakeFirst())
-    article_date = Field(output_processor=TakeFirst())
-    timestamp = Field(output_processor=TakeFirst())
-    stock_prices = Field()
+    id = Field(output_processor=TakeFirst(), default="")
+    url = Field(output_processor=TakeFirst(), default="")
+    title = Field(output_processor=TakeFirst(), default="")
+    content = Field(output_processor=TakeFirst(), default="")
+    article_date = Field(output_processor=TakeFirst(), default=None)
+    timestamp = Field(output_processor=TakeFirst(), default=None)
+    stock_prices = Field(default={})

@@ -54,6 +54,7 @@ class YahooFinanceNewsSpider(CrawlSpider):
             symbol = fin_streamer.xpath('./@data-symbol').get()
             value = fin_streamer.xpath('./span/text()').get()
             stock_prices[symbol] = value
+        item_loader.add_value('stock_prices', stock_prices)
 
         item = item_loader.load_item()
 
@@ -64,6 +65,6 @@ class YahooFinanceNewsSpider(CrawlSpider):
             'content': item.get('content'),
             'article_date': item.get('article_date'),
             'timestamp': item.get('timestamp'),
-            'stock_prices': stock_prices
+            'stock_prices': item.get('stock_prices')
         }
         yield scraped_data

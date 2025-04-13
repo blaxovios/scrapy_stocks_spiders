@@ -51,7 +51,7 @@ class YahooFinanceNewsSpiderSpiderMiddleware:
             yield r
 
     def spider_opened(self, spider):
-        spider.logger.info("Spider opened: %s" % spider.name)
+        pass
 
 
 class YahooFinanceNewsSpiderDownloaderMiddleware:
@@ -127,7 +127,8 @@ class DuplicateUrlFilterMiddleware:
 
     def spider_opened(self, spider):
         """Load and log scraped URLs from existing parquet files in 'data/parquet' dir."""
-        parquet_dir = 'data/parquet'
+        # TODO: Add path for not scraping already scraped URLs
+        parquet_dir = ''
         if not path.exists(parquet_dir):
             spider.logger.debug("Parquet directory does not exist: %s", parquet_dir)
             return

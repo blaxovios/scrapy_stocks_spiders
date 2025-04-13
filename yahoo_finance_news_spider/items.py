@@ -14,4 +14,4 @@ class YahooFinanceNewsSpiderItem(Item):
     content = Field(output_processor=TakeFirst(), default="")
     article_date = Field(output_processor=TakeFirst(), default=None)
     timestamp = Field(output_processor=TakeFirst(), default=None)
-    stock_prices = Field(default={})
+    stock_prices = Field(output_processor=TakeFirst(), default={})

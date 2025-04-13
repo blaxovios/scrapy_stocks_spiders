@@ -27,17 +27,7 @@ class YahooFinanceNewsSpiderPipeline:
                 await self._append_to_parquet()
 
     async def _append_to_parquet(self):
-        schema = {
-            "id": pl.String,
-            "url": pl.String,
-            "title": pl.String,
-            "content": pl.String,
-            "article_date": pl.String,
-            "timestamp": pl.String,
-            "stock_prices": pl.Struct({"symbol": pl.String, "price": pl.String})
-        }
-        
-        lf = pl.LazyFrame(self.items, schema=schema, infer_schema_length=1000)
+        lf = pl.LazyFrame(self.items, infer_schema_length=1000)
         timestamp = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
         file_name = f'scraped_data_{self.file_count:03d}_{timestamp}.parquet'
         file_path = os.path.join(self.file_path, file_name)

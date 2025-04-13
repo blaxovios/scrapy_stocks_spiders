@@ -13,7 +13,7 @@ SPIDER_MODULES = ["yahoo_finance_news_spider.spiders"]
 NEWSPIDER_MODULE = "yahoo_finance_news_spider.spiders"
 
 RETRY_ENABLED = True
-RETRY_TIMES = 1
+RETRY_TIMES = 3
 RETRY_HTTP_CODES = [500, 502, 503, 504, 522, 524, 408, 429, 400, 403, 404]
 LOG_LEVEL='INFO'
 LOG_ENABLED = False
@@ -25,12 +25,12 @@ LOG_ENABLED = False
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 16
+CONCURRENT_REQUESTS = 32
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 1  # If Set to 0, I get 404 and spider shuts down early.
+DOWNLOAD_DELAY = 0.5  # If Set to 0, I get 404 and spider shuts down early.
 RANDOMIZE_DOWNLOAD_DELAY = False
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16

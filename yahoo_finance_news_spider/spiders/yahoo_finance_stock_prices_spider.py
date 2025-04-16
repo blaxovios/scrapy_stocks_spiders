@@ -1,9 +1,9 @@
 import json
 import logging
+from datetime import datetime
 
 from scrapy.loader import ItemLoader
-from scrapy.spiders import CrawlSpider, Rule
-from scrapy.linkextractors import LinkExtractor
+from scrapy.spiders import CrawlSpider
 
 from yahoo_finance_news_spider.items import YahooFinanceStockPricesItem
 from yahoo_finance_news_spider.utils import generate_uuid, setup_logging
@@ -22,13 +22,7 @@ class YahooFinanceStockPriceSpider(CrawlSpider):
             for symbol in stock_symbols
         ]
 
-    rules = [
-        Rule(
-            LinkExtractor(allow=r'https://finance\.yahoo\.com/quote/[a-zA-Z0-9\-]+/history/\?period1=1577836800&period2=1744818085'),
-            callback='parse_link',
-            follow=True
-        ),
-    ]
+    rules = []
     
     custom_settings = {
         'FEED_URI': 'data/parquet/scraped_stock_prices_{time}.parquet',
@@ -72,12 +66,14 @@ class YahooFinanceStockPriceSpider(CrawlSpider):
                 item_loader.add_value('close_price', close_price)
                 item_loader.add_value('adj_close_price', adj_close_price)
                 item_loader.add_value('volume', volume)
+                item_loader.add_value('timestamp', datetime.now().isoformat())
 
         item = item_loader.load_item()
 
         scraped_data = {
             'id': generate_uuid(response),
             'url': response.url,
+            'timestamp': item.get('timestamp'),
             'stock_price_date': item.get('stock_price_date'),
             'open_price': item.get('open_price'),
             'high_price': item.get('high_price'),

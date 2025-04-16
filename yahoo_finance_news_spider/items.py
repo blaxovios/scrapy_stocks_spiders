@@ -19,6 +19,7 @@ class YahooFinanceNewsSpiderItem(Item):
 class YahooFinanceStockPricesItem(Item):
     id = Field(output_processor=TakeFirst(), default="")
     url = Field(output_processor=TakeFirst(), default="")
+    timestamp = Field(output_processor=TakeFirst(), default=None)
     stock_price_date = Field(output_processor=TakeFirst(), default="")
     open_price = Field(output_processor=TakeFirst(), default="")
     high_price = Field(output_processor=TakeFirst(), default="")

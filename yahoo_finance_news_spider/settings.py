@@ -30,7 +30,7 @@ CONCURRENT_REQUESTS = 32
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 1  # If Set to 0, I get 404 and spider shuts down early.
+DOWNLOAD_DELAY = 0.5  # If Set to 0, I get 404 and spider shuts down early.
 RANDOMIZE_DOWNLOAD_DELAY = False
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
@@ -70,8 +70,8 @@ DOWNLOADER_MIDDLEWARES = {
     "yahoo_finance_news_spider.middlewares.YahooFinanceNewsSpiderDownloaderMiddleware": 543,
     "yahoo_finance_news_spider.middlewares.DuplicateUrlFilterMiddleware": 545,
     # Keep your custom retry middleware if applicable
-    "yahoo_finance_news_spider.middlewares.CustomRetryMiddleware": 550,
-    'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
+    # "yahoo_finance_news_spider.middlewares.CustomRetryMiddleware": 550,
+    'scrapy.downloadermiddlewares.retry.RetryMiddleware': 550,
 }
 
 # Enable or disable extensions

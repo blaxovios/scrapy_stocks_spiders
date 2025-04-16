@@ -30,4 +30,5 @@ For more information on how to use see [Usage](https://github.com/bloomberg/memr
 
 ## Usage
 
-`scrapy crawl yahoofinance_news`
+`scrapy crawl yahoo_finance_news_spider`
+`scrapy crawl yahoo_finance_stock_prices_spider`

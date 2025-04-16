@@ -11,7 +11,7 @@ from yahoo_finance_news_spider.utils import generate_uuid, setup_logging
 
 
 class YahooFinanceNewsSpider(CrawlSpider):
-    name = "yahoofinance_news"
+    name = "yahoo_finance_news_spider"
     allowed_domains = ["finance.yahoo.com"]
     start_urls = ['https://finance.yahoo.com']
     
@@ -24,6 +24,11 @@ class YahooFinanceNewsSpider(CrawlSpider):
             follow=True
         ),
     ]
+    
+    custom_settings = {
+        'FEED_URI': 'data/parquet/scraped_data_{time}.parquet',
+        'FEED_FORMAT': 'parquet',
+    }
     
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):

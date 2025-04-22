@@ -15,7 +15,7 @@ NEWSPIDER_MODULE = "yahoo_finance_news_spider.spiders"
 RETRY_ENABLED = True
 RETRY_TIMES = 3
 RETRY_HTTP_CODES = [500, 502, 503, 504, 522, 524, 408, 429, 400, 403, 404]
-LOG_LEVEL='DEBUG'
+LOG_LEVEL='INFO'
 LOG_ENABLED = False
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -25,29 +25,24 @@ LOG_ENABLED = False
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 128
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 0.5  # If Set to 0, I get 404 and spider shuts down early.
+DOWNLOAD_DELAY = 0  # If Set to 0, I get 404 and spider shuts down early.
 RANDOMIZE_DOWNLOAD_DELAY = False
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-COOKIES_ENABLED = False
+COOKIES_ENABLED = True
 
 # Disable Telnet Console (enabled by default)
 TELNETCONSOLE_ENABLED = False
 
-USER_AGENTS = [
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36",
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15",
-    "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0",
-    # Add more user agents here...
-]
+#USER_AGENT = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0",
 
 # Override the default request headers:
 DEFAULT_REQUEST_HEADERS = {
@@ -133,3 +128,51 @@ FEEDS = {
         },
     },
 }
+
+# ----------------------------------------
+# PLAYWRIGHT SETTINGS
+# ----------------------------------------
+DOWNLOAD_HANDLERS = {
+    "http":  "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+    "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+}
+
+TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
+
+# The browser type to be launched, e.g. chromium, firefox, webkit.
+PLAYWRIGHT_BROWSER_TYPE = "chromium"
+
+# A dictionary with options to be passed as keyword arguments when launching the Browser.
+# See https://playwright.dev/python/docs/api/class-browsertype#browser-type-launch
+PLAYWRIGHT_LAUNCH_OPTIONS = {
+    # "headless": False,
+    "timeout": 60000.0 * 3,  # 10 minutes to wait for the browser instance to start
+}
+
+# A dictionary which defines Browser contexts to be created on startup. It should be a mapping of (name, keyword arguments).
+# See https://playwright.dev/python/docs/api/class-browser#browser-new-context
+PLAYWRIGHT_CONTEXTS = {
+    "default": {
+        "ignore_https_errors": True,
+        "java_script_enabled": False,
+    },
+}
+
+# Maximum amount of allowed concurrent Playwright contexts. If unset or None, no limit is enforced.
+# See https://github.com/scrapy-plugins/scrapy-playwright#maximum-concurrent-context-count
+#PLAYWRIGHT_MAX_CONTEXTS = 8
+
+# A predicate function (or the path to a function) that receives a playwright.async_api.Request object and must return True if the request should be aborted, False otherwise.
+PLAYWRIGHT_ABORT_REQUEST = lambda req: req.resource_type == "image" or "GetFile" in req.url
+
+# Timeout to be used when requesting pages by Playwright. If None or unset, the default value will be used (30000 ms at the time of writing this).
+# See https://playwright.dev/python/docs/api/class-browsercontext#browser-context-set-default-navigation-timeout
+PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT = 60000.0 * 3  # 10 minutes, should be overkill
+
+# Maximum amount of allowed concurrent Playwright pages for each context; defaults to the value of Scrapy's CONCURRENT_REQUESTS setting
+# See https://github.com/scrapy-plugins/scrapy-playwright#receiving-page-objects-in-callbacks
+#PLAYWRIGHT_MAX_PAGES_PER_CONTEXT = CONCURRENT_REQUESTS
+
+# To handle media redirections (disabled by default)
+# See https://docs.scrapy.org/en/latest/topics/media-pipeline.html#allowing-redirections
+MEDIA_ALLOW_REDIRECTS = False

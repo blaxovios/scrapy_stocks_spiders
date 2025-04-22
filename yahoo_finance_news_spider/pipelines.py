@@ -6,11 +6,12 @@ import asyncio
 
 class YahooFinanceNewsSpiderPipeline:
     def __init__(self):
+        # TODO: Use from settings.py
         self.file_path = 'data/parquet/'
         self.items = []
         self.file_count = 0
         self.lock = asyncio.Lock()
-        self.max_items_per_file = 100
+        self.max_items_per_file = 10000
 
     async def process_item(self, item, spider):
         async with self.lock:
@@ -27,6 +28,7 @@ class YahooFinanceNewsSpiderPipeline:
                 await self._append_to_parquet()
 
     async def _append_to_parquet(self):
+        # TODO: Create a custom schema for each spider
         lf = pl.LazyFrame(self.items, infer_schema_length=1000)
         timestamp = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
         file_name = f'scraped_data_{self.file_count:03d}_{timestamp}.parquet'

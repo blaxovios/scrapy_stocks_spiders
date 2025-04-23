@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "yahoo_finance_news_spider"
+name = "stocks_spider"
 version = "0.0.1"
 dependencies = ["scrapy", "polars", "scrapy-playwright"] 
 requires-python = ">=3.6, <=3.13"
@@ -22,10 +22,10 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/blaxovios/yahoo_finance_news_spider"
-Repository = "https://github.com/blaxovios/yahoo_finance_news_spider"
-"Bug Tracker" = "https://github.com/blaxovios/yahoo_finance_news_spider/issues"
-Changelog = "https://github.com/blaxovios/yahoo_finance_news_spider/blob/master/CHANGELOG.md"
+Homepage = "https://github.com/blaxovios/scrapy_stocks_spiders"
+Repository = "https://github.com/blaxovios/scrapy_stocks_spiders"
+"Bug Tracker" = "https://github.com/blaxovios/scrapy_stocks_spiders/issues"
+Changelog = "https://github.com/blaxovios/scrapy_stocks_spiders/blob/master/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src"]

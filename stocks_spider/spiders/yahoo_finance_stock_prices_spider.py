@@ -7,8 +7,8 @@ import scrapy
 from scrapy.loader import ItemLoader
 from scrapy.utils.project import get_project_settings
 
-from yahoo_finance_news_spider.items import YahooFinanceStockPricesItem
-from yahoo_finance_news_spider.utils import generate_uuid
+from stocks_spider.items import YahooFinanceStockPricesItem
+from stocks_spider.utils import generate_uuid
 
 
 class YahooFinanceStockPriceSpider(scrapy.Spider):
@@ -17,9 +17,6 @@ class YahooFinanceStockPriceSpider(scrapy.Spider):
 
     _settings = get_project_settings()
     custom_settings = {
-        # per‐spider file + console logging at DEBUG/INFO
-        "LOG_LEVEL": "INFO",
-
         # parquet feeds in batches
         "FEEDS": {
             _settings["FEED_URI_TEMPLATE"]: {

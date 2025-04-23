@@ -10,16 +10,17 @@ LOG_ENABLED = True
 LOG_LEVEL = "INFO"
 LOG_STDOUT = True   # Captures python stdout/stderr into the log
 
-BOT_NAME = "yahoo_finance_news_spider"
-SPIDER_MODULES = ["yahoo_finance_news_spider.spiders"]
-NEWSPIDER_MODULE = "yahoo_finance_news_spider.spiders"
+BOT_NAME = "stocks_spider"
+SPIDER_MODULES = ["stocks_spider.spiders"]
+NEWSPIDER_MODULE = "stocks_spider.spiders.yahoo_finance_news_spider"
+STOCKS_SPIDER_MODULE = "stocks_spider.spiders.yahoo_finance_stock_prices_spider"
 
 
 # -------------------------------------------------------------------
 # RETRY
 # -------------------------------------------------------------------
 RETRY_ENABLED = True
-RETRY_TIMES = 3
+RETRY_TIMES = 5
 RETRY_HTTP_CODES = [500, 502, 503, 504, 522, 524, 408, 429, 400, 403, 404]
 
 # Obey robots.txt rules
@@ -38,7 +39,7 @@ RANDOMIZE_DOWNLOAD_DELAY = False
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-COOKIES_ENABLED = False
+COOKIES_ENABLED = True
 
 # Disable Telnet Console (enabled by default)
 TELNETCONSOLE_ENABLED = False
@@ -47,27 +48,31 @@ TELNETCONSOLE_ENABLED = False
 # COMMON DEFAULT REQUEST HEADERS
 # -------------------------------------------------------------------
 
+USER_AGENT = "Chrome/51.0.2704.64"
 # these will be applied unless a spider overrides or extends them
 DEFAULT_REQUEST_HEADERS = {
     # emulate a real browser
     "Accept-Language": "en-US,en;q=0.5",
     "Referer": "https://finance.yahoo.com/",
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:118.0) Gecko/20100101 Firefox/118.0",
 }
 
-# Enable or disable spider middlewares
-# See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-SPIDER_MIDDLEWARES = {
-   "yahoo_finance_news_spider.middlewares.YahooFinanceNewsSpiderSpiderMiddleware": 543,
-}
+# -------------------------------------------------------------------
+# MIDDLEWARES
+# -------------------------------------------------------------------
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    "yahoo_finance_news_spider.middlewares.YahooFinanceNewsSpiderDownloaderMiddleware": 543,
-    "yahoo_finance_news_spider.middlewares.DuplicateUrlFilterMiddleware": 545,
-    "scrapy.downloadermiddlewares.retry.RetryMiddleware": 550,
+    f"{BOT_NAME}.middlewares.PersistentDuplicateFilterMiddleware": 700,
 }
+
+
+# -------------------------------------------------------------------
+# DEDUPLICATION
+# -------------------------------------------------------------------
+
+DUPLICATE_FILTER_DIR = os.path.join(os.getcwd(), "data", "parquet")
+DUPLICATE_FILTER_FIELD = "url"
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -101,9 +106,6 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = CONCURRENT_REQUESTS
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"
 
-# Set settings whose default value is deprecated to a future-proof value
-TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
-
 # -------------------------------------------------------------------
 # FEED EXPORT TEMPLATE
 # -------------------------------------------------------------------
@@ -129,7 +131,7 @@ FEEDS = {
     }
 }
 FEED_EXPORTERS = {
-    "parquet": "yahoo_finance_news_spider.exporters.PolarsParquetItemExporter",
+    "parquet": f"{BOT_NAME}.exporters.PolarsParquetItemExporter",
 }
 
 # -------------------------------------------------------------------

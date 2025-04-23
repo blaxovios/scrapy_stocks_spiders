@@ -1,0 +1,27 @@
+# Render.com service and cron job definitions
+
+services:
+  - type: web
+    name: yahoo-finance-spider-service
+    env: docker
+    plan: free
+    region: oregon
+    dockerfilePath: Dockerfile
+    buildCommand: pip install --no-cache-dir -r requirements.txt
+    startCommand: python health_check.py
+    autoDeploy: true
+
+cronJobs:
+  - name: scrape-news
+    schedule: "0 2 * * *"    # daily at 02:00 UTC
+    service: yahoo-finance-spider-service
+    shell: bash
+    command: |
+      scrapy crawl yahoo_finance_news_spider
+
+  - name: scrape-stocks
+    schedule: "0 3 * * *"    # daily at 03:00 UTC
+    service: yahoo-finance-spider-service
+    shell: bash
+    command: |
+      scrapy crawl yahoo_finance_stock_prices_spider

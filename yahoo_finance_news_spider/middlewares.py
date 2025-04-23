@@ -1,7 +1,5 @@
 from os import path, listdir
 from scrapy import signals
-from scrapy.downloadermiddlewares.retry import RetryMiddleware
-from scrapy.utils.response import response_status_message
 import polars as pl
 # Import local modules
 from yahoo_finance_news_spider.utils import normalize_url
@@ -99,22 +97,6 @@ class YahooFinanceNewsSpiderDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)
-
-
-class CustomRetryMiddleware(RetryMiddleware):
-    def process_response(self, request, response, spider):
-        try:
-            return super().process_response(request, response, spider)
-        except ValueError as e:
-            spider.logger.error("Caught ValueError in process_response: %s", e)
-            reason = response_status_message(response.status)
-            return self._retry(request, reason, spider) or response
-
-    def process_exception(self, request, exception, spider):
-        if isinstance(exception, ValueError):
-            spider.logger.error("Caught ValueError in process_exception: %s", exception)
-            reason = str(exception)
-            return self._retry(request, reason, spider)
 
 
 class DuplicateUrlFilterMiddleware:

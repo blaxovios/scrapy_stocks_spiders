@@ -55,7 +55,8 @@ def generate_uuid(response: http.Response) -> str:
     try:
         content_hash = hashlib.sha256(response.body).hexdigest()
     except (TypeError, AttributeError):
-        return str(uuid5(NAMESPACE_DNS, response.url))
+        # If response.body is not a bytes-like object, convert it to bytes
+        content_hash = hashlib.sha256(str(response.body).encode()).hexdigest()
 
     try:
         parsed_url = urlsplit(response.url)
@@ -65,13 +66,15 @@ def generate_uuid(response: http.Response) -> str:
         return str(uuid5(NAMESPACE_DNS, response.url))
 
     uuid_str = f"{normalized_url}:{content_hash}"
-    return str(uuid5(NAMESPACE_DNS, uuid_str))       
+    return str(uuid5(NAMESPACE_DNS, uuid_str))    
  
 def normalize_url(url):
     """
     Normalize the URL by removing trailing slashes from the path.
     You can extend this function for further normalization.
     """
+    if not isinstance(url, str) or not url.startswith('http'):
+        raise ValueError('Invalid URL')
     parts = urlparse(url)
     normalized_path = parts.path.rstrip('/')
     return urlunparse((parts.scheme, parts.netloc, normalized_path, parts.params, parts.query, parts.fragment))

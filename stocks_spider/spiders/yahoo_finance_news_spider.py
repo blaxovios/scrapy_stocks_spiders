@@ -33,7 +33,7 @@ class YahooFinanceNewsSpider(CrawlSpider):
         "FEEDS": {
             _settings["FEED_URI_TEMPLATE"]: {
                 **_settings["FEEDS_DEFAULT_CONFIG"],
-                "batch_item_count": 100,
+                "batch_item_count": 1_000,
                 "format": "parquet",
             }
         },
@@ -92,10 +92,10 @@ class YahooFinanceNewsSpider(CrawlSpider):
         item = loader.load_item()
         yield {
             "id": generate_uuid(response),
-            "url": item["url"],
-            "title": item["title"],
-            "content": item["content"],
-            "article_date": item["article_date"],
-            "timestamp": item["timestamp"],
-            "stock_prices": item["stock_prices"],
+            "url": item.get("url"),
+            "title": item.get("title"),
+            "content": item.get("content"),
+            "article_date": item.get("article_date"),
+            "timestamp": item.get("timestamp"),
+            "stock_prices": item.get("stock_prices"),
         }

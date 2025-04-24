@@ -17,6 +17,7 @@ class YahooFinanceStockPriceSpider(scrapy.Spider):
 
     _settings = get_project_settings()
     custom_settings = {
+        "LOG_LEVEL": "DEBUG",
         # parquet feeds in batches
         "FEEDS": {
             _settings["FEED_URI_TEMPLATE"]: {
@@ -26,8 +27,10 @@ class YahooFinanceStockPriceSpider(scrapy.Spider):
         },
 
         # shared browser‐like headers
-        "DEFAULT_REQUEST_HEADERS": _settings["DEFAULT_REQUEST_HEADERS"],
-
+        "DEFAULT_REQUEST_HEADERS": {
+            **_settings["DEFAULT_REQUEST_HEADERS"],
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101 Firefox/102.0",   # Necessary to not get 503
+        },
         # Playwright on only here
         "DOWNLOAD_HANDLERS": _settings["DOWNLOAD_HANDLERS"],
         "PLAYWRIGHT_BROWSER_TYPE": _settings["PLAYWRIGHT_BROWSER_TYPE"],

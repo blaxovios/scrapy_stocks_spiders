@@ -1,5 +1,6 @@
 import hashlib
-from urllib.parse import urlsplit, urlunsplit, urlparse, urlunparse
+from time import time
+from urllib.parse import urlparse, urlunparse
 from uuid import uuid5, NAMESPACE_DNS
 from scrapy import http
 import logging
@@ -42,8 +43,8 @@ def generate_uuid(response: http.Response) -> str:
     """
     Generate a UUID for a Scrapy response.
 
-    The UUID is based on the normalized URL and the content hash of the response body.
-    This ensures that the same URL with the same content will always produce the same UUID.
+    The UUID is based on the URL, content hash, response headers, and response status code.
+    This ensures that the same URL with different content or headers will produce a different UUID.
 
     Parameters:
     - response (scrapy.http.Response): The response to generate a UUID for.
@@ -51,22 +52,14 @@ def generate_uuid(response: http.Response) -> str:
     Returns:
     - str: The generated UUID.
     """
-    
-    try:
-        content_hash = hashlib.sha256(response.body).hexdigest()
-    except (TypeError, AttributeError):
-        # If response.body is not a bytes-like object, convert it to bytes
-        content_hash = hashlib.sha256(str(response.body).encode()).hexdigest()
+    url = response.url
+    content_hash = hashlib.sha256(response.body).hexdigest()
+    headers = response.headers
+    status_code = response.status
+    timestamp = int(time())
 
-    try:
-        parsed_url = urlsplit(response.url)
-        # Normalize the URL
-        normalized_url = urlunsplit((parsed_url.scheme, parsed_url.netloc, parsed_url.path, '', ''))
-    except (TypeError, ValueError, AttributeError):
-        return str(uuid5(NAMESPACE_DNS, response.url))
-
-    uuid_str = f"{normalized_url}:{content_hash}"
-    return str(uuid5(NAMESPACE_DNS, uuid_str))    
+    uuid_str = f"{url}:{content_hash}:{headers}:{status_code}:{timestamp}"
+    return str(uuid5(NAMESPACE_DNS, uuid_str))  
  
 def normalize_url(url):
     """

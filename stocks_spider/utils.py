@@ -1,7 +1,5 @@
-import hashlib
-from time import time
 from urllib.parse import urlparse, urlunparse
-from uuid import uuid5, NAMESPACE_DNS
+from uuid import uuid4
 from scrapy import http
 import logging
 from logging.handlers import RotatingFileHandler
@@ -39,12 +37,9 @@ def setup_logging(debug_filename: str = 'debug', console_level: int = logging.IN
     # Print current handlers after setup
     print("Handlers after setup:", logging.root.handlers)
 
-def generate_uuid(response: http.Response) -> str:
+def generate_uuid() -> str:
     """
     Generate a UUID for a Scrapy response.
-
-    The UUID is based on the URL, content hash, response headers, and response status code.
-    This ensures that the same URL with different content or headers will produce a different UUID.
 
     Parameters:
     - response (scrapy.http.Response): The response to generate a UUID for.
@@ -52,14 +47,7 @@ def generate_uuid(response: http.Response) -> str:
     Returns:
     - str: The generated UUID.
     """
-    url = response.url
-    content_hash = hashlib.sha256(response.body).hexdigest()
-    headers = response.headers
-    status_code = response.status
-    timestamp = int(time())
-
-    uuid_str = f"{url}:{content_hash}:{headers}:{status_code}:{timestamp}"
-    return str(uuid5(NAMESPACE_DNS, uuid_str))  
+    return str(uuid4())
  
 def normalize_url(url):
     """

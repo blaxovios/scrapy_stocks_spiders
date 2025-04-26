@@ -1,0 +1,110 @@
+2025-04-26 17:57:30,046 [scrapy.addons] INFO: Enabled addons:
+[]
+2025-04-26 17:57:30,101 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.corestats.CoreStats',
+ 'scrapy.extensions.memusage.MemoryUsage',
+ 'scrapy.extensions.feedexport.FeedExporter',
+ 'scrapy.extensions.logstats.LogStats',
+ 'scrapy.extensions.throttle.AutoThrottle']
+2025-04-26 17:57:30,102 [scrapy.crawler] INFO: Overridden settings:
+{'AUTOTHROTTLE_ENABLED': True,
+ 'AUTOTHROTTLE_TARGET_CONCURRENCY': 8,
+ 'BOT_NAME': 'stocks_spider',
+ 'CONCURRENT_REQUESTS': 8,
+ 'DOWNLOAD_DELAY': 0.5,
+ 'LOG_LEVEL': 'INFO',
+ 'LOG_STDOUT': True,
+ 'NEWSPIDER_MODULE': 'stocks_spider.spiders.yahoo_finance_news_spider',
+ 'RANDOMIZE_DOWNLOAD_DELAY': False,
+ 'RETRY_HTTP_CODES': [500, 502, 503, 504, 522, 524, 408, 429, 400, 403, 404],
+ 'RETRY_TIMES': 5,
+ 'SPIDER_MODULES': ['stocks_spider.spiders'],
+ 'TELNETCONSOLE_ENABLED': False,
+ 'TWISTED_REACTOR': 'twisted.internet.asyncioreactor.AsyncioSelectorReactor',
+ 'USER_AGENT': 'Chrome/51.0.2704.64'}
+2025-04-26 17:57:30,160 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'stocks_spider.middlewares.PersistentDuplicateFilterMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2025-04-26 17:57:30,162 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2025-04-26 17:57:30,162 [scrapy.middleware] INFO: Enabled item pipelines:
+[]
+2025-04-26 17:57:30,162 [scrapy.core.engine] INFO: Spider opened
+2025-04-26 17:57:30,166 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2025-04-26 17:57:30,168 [scrapy-playwright] INFO: Starting download handler
+2025-04-26 17:57:30,168 [scrapy-playwright] INFO: Starting download handler
+2025-04-26 17:57:30,346 [scrapy-playwright] INFO: Launching 1 startup context(s)
+2025-04-26 17:57:30,346 [scrapy-playwright] INFO: Launching browser chromium
+2025-04-26 17:57:30,349 [scrapy-playwright] INFO: Launching 1 startup context(s)
+2025-04-26 17:57:30,349 [scrapy-playwright] INFO: Launching browser chromium
+2025-04-26 17:57:30,421 [scrapy-playwright] INFO: Browser chromium launched
+2025-04-26 17:57:30,423 [scrapy-playwright] INFO: Browser chromium launched
+2025-04-26 17:57:30,428 [scrapy-playwright] INFO: Startup context(s) launched
+2025-04-26 17:57:30,429 [scrapy-playwright] INFO: Startup context(s) launched
+2025-04-26 17:58:30,167 [scrapy.extensions.logstats] INFO: Crawled 1 pages (at 1 pages/min), scraped 0 items (at 0 items/min)
+2025-04-26 17:58:35,976 [root] ERROR: Page.wait_for_selector: Timeout 60000ms exceeded.
+Call log:
+  - waiting for locator("div.quote") to be visible
+
+2025-04-26 17:58:41,899 [scrapy.core.engine] INFO: Closing spider (finished)
+2025-04-26 17:58:42,020 [scrapy.extensions.feedexport] INFO: Stored parquet feed (3852 items) in: data/parquet/yahoo_finance_stock_prices_spider/scraped_yahoo_finance_stock_prices_spider_2025-04-26T14-57-30+00-00_1.parquet
+2025-04-26 17:58:42,021 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/request_bytes': 296,
+ 'downloader/request_count': 1,
+ 'downloader/request_method_count/GET': 1,
+ 'downloader/response_bytes': 3186505,
+ 'downloader/response_count': 1,
+ 'downloader/response_status_count/200': 1,
+ 'elapsed_time_seconds': 71.732757,
+ 'feedexport/success_count/FileFeedStorage': 1,
+ 'finish_reason': 'finished',
+ 'finish_time': datetime.datetime(2025, 4, 26, 14, 58, 41, 899542, tzinfo=datetime.timezone.utc),
+ 'item_scraped_count': 3852,
+ 'items_per_minute': None,
+ 'log_count/ERROR': 1,
+ 'log_count/INFO': 20,
+ 'memusage/max': 131076096,
+ 'memusage/startup': 97918976,
+ 'playwright/browser_count': 2,
+ 'playwright/context_count': 2,
+ 'playwright/context_count/max_concurrent': 1,
+ 'playwright/context_count/persistent/False': 2,
+ 'playwright/context_count/remote/False': 2,
+ 'playwright/page_count': 1,
+ 'playwright/page_count/max_concurrent': 1,
+ 'playwright/request_count': 376,
+ 'playwright/request_count/aborted': 150,
+ 'playwright/request_count/method/GET': 376,
+ 'playwright/request_count/navigation': 2,
+ 'playwright/request_count/resource_type/document': 2,
+ 'playwright/request_count/resource_type/script': 224,
+ 'playwright/request_count/resource_type/stylesheet': 150,
+ 'playwright/response_count': 2,
+ 'playwright/response_count/method/GET': 2,
+ 'playwright/response_count/resource_type/document': 2,
+ 'response_received_count': 1,
+ 'responses_per_minute': None,
+ 'scheduler/dequeued': 1,
+ 'scheduler/dequeued/memory': 1,
+ 'scheduler/enqueued': 1,
+ 'scheduler/enqueued/memory': 1,
+ 'start_time': datetime.datetime(2025, 4, 26, 14, 57, 30, 166785, tzinfo=datetime.timezone.utc)}
+2025-04-26 17:58:42,021 [scrapy.core.engine] INFO: Spider closed (finished)
+2025-04-26 17:58:42,021 [scrapy-playwright] INFO: Closing download handler
+2025-04-26 17:58:42,026 [scrapy-playwright] INFO: Closing browser
+2025-04-26 17:58:42,054 [scrapy-playwright] INFO: Closing download handler
+2025-04-26 17:58:42,059 [scrapy-playwright] INFO: Closing browser
